@@ -1,0 +1,69 @@
+version: '1.0'
+services:
+  - name: db
+    type: mariadb
+    version: 10.3
+    configuration: StandAlone
+    username: ghost
+    # Ask password on create
+    userPassword: null
+    password: null
+    ports:
+      - 3306
+    remoteAccess: false
+    comments:
+      userPassword: Password for user "ghost"
+    deployTo:
+      - ghost
+
+  - name: ghost
+    type: docker
+    image: ghost
+    version: latest
+    ports:
+      - 2368
+    remoteAccess: false
+    env:
+      database__client: mysql
+      database__connection__host: "{{=service('db').getMasterAlias()}}"
+      database__connection__user: "{{=service('db').get('username')}}"
+      database__connection__password: "{{=service('db').get('userPassword')}}"
+      database__connection__database: "{{=service('db').get('username')}}"
+    deployTo:
+      - ghost
+
+  # - name: pma
+  #   type: php
+  #   version: 7.1
+  #   source:
+  #     type: git
+  #     url: https://github.com/phpmyadmin/phpmyadmin
+  #   extensions:
+  #     - mysqli
+  #     - opcache
+  #   configFiles:
+  #     - dest: $MAIN_PATH/config.inc.php
+  #       src: ./configs/config.inc.php
+  #   localDeps: composer install
+  #   deployTo:
+  #     - ghost
+
+  - name: web
+    type: nginx
+    version: 1.13
+    ports:
+      - 80
+      - 443
+    remoteAccess: true
+    serviceFiles:
+      - name: ghost
+    # - name: pma
+    #   static: true
+    deployTo:
+      - ghost
+
+hosts:
+  - name: ghost
+    requirements:
+      cores: 1
+      memory: 1

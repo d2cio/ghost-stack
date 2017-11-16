@@ -19,7 +19,7 @@ services:
   - name: ghost
     type: docker
     image: ghost
-    version: latest
+    version: 1
     ports:
       - 2368
     remoteAccess: false

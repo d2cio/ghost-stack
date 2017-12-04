@@ -24,6 +24,7 @@ services:
       - 2368
     remoteAccess: false
     env:
+      url: "http://{{=service('ghost').getNginxDomain()}}"
       database__client: mysql
       database__connection__host: "{{=service('db').getMasterAlias()}}"
       database__connection__user: "{{=service('db').get('username')}}"

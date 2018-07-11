@@ -5,6 +5,7 @@ services:
     version: 10.3
     configuration: StandAlone
     username: ghost
+    database: ghost
     # Ask password on create
     userPassword: null
     password: null
@@ -29,7 +30,7 @@ services:
       database__connection__host: "{{=service('db').getMasterAlias()}}"
       database__connection__user: "{{=service('db').get('username')}}"
       database__connection__password: "{{=service('db').get('userPassword')}}"
-      database__connection__database: "{{=service('db').get('username')}}"
+      database__connection__database: "{{=service('db').get('database')}}"
     deployTo:
       - ghost
 

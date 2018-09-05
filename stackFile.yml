@@ -20,7 +20,7 @@ services:
   - name: ghost
     type: docker
     image: ghost
-    version: 1
+    version: 2
     ports:
       - 2368
     remoteAccess: false
@@ -52,7 +52,7 @@ services:
 
   - name: web
     type: nginx
-    version: 1.13
+    version: 1.14
     ports:
       - 80
       - 443

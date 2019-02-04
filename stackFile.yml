@@ -34,21 +34,22 @@ services:
     deployTo:
       - ghost
 
-  # - name: pma
-  #   type: php
-  #   version: 7.1
-  #   source:
-  #     type: git
-  #     url: https://github.com/phpmyadmin/phpmyadmin
-  #   extensions:
-  #     - mysqli
-  #     - opcache
-  #   configFiles:
-  #     - dest: $MAIN_PATH/config.inc.php
-  #       src: ./configs/config.inc.php
-  #   localDeps: composer install
-  #   deployTo:
-  #     - ghost
+  - name: pma
+    type: php
+    version: 7.1
+    source:
+      type: git
+      url: https://github.com/phpmyadmin/phpmyadmin
+      version: STABLE
+    extensions:
+      - mysqli
+      - opcache
+    configFiles:
+      - dest: $MAIN_PATH/config.inc.php
+        src: ./configs/config.inc.php
+    localDeps: composer install
+    deployTo:
+      - ghost
 
   - name: web
     type: nginx
@@ -59,8 +60,8 @@ services:
     remoteAccess: true
     serviceFiles:
       - name: ghost
-    # - name: pma
-    #   static: true
+      - name: pma
+        static: true
     deployTo:
       - ghost
 

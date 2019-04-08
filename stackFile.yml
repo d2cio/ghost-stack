@@ -2,7 +2,7 @@ version: '1.0'
 services:
   - name: db
     type: mariadb
-    version: 10.3
+    version: 10.4
     configuration: StandAlone
     username: ghost
     database: ghost
@@ -35,25 +35,21 @@ services:
       - ghost
 
   - name: pma
-    type: php
-    version: 7.1
-    source:
-      type: git
-      url: https://github.com/phpmyadmin/phpmyadmin
-      version: STABLE
-    extensions:
-      - mysqli
-      - opcache
-    configFiles:
-      - dest: $MAIN_PATH/config.inc.php
-        src: ./configs/config.inc.php
-    localDeps: composer install
+    type: docker
+    image: phpmyadmin/phpmyadmin
+    version: latest
+    ports:
+      - 80
+    remoteAccess: false
+    env:
+      PMA_HOST: "{{=service('db').getMasterAlias()}}"
+      PMA_PORT: "{{=service('db').getMainPort()}}"
     deployTo:
       - ghost
 
   - name: web
     type: nginx
-    version: 1.14
+    version: 1.15
     ports:
       - 80
       - 443
@@ -61,7 +57,6 @@ services:
     serviceFiles:
       - name: ghost
       - name: pma
-        static: true
     deployTo:
       - ghost
 
